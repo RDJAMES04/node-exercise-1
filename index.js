@@ -1,9 +1,36 @@
-const fs = require('fs');
-const process = require('process');
+//Descriptive variable,destructuring, early return
+const fs = require('fs')
+const process = require('process')
 
-const expression = process.argv.slice(2);
+const [,, inputFile, outputFile, overwriteFile] = process.argv
 
-const array = fs.readFileSync(expression[0]).toString().split('\n');
-for (let i = 0; i < array.length; i += 1) {
-  console.log(`${i + 1}: ${array[i]}`);
+if (outputFile !== undefined) {
+  const arrayFile = fs.readFileSync(inputFile).toString().split('\n')
+  let fullString = ''
+  for (let i = 0; i < arrayFile.length; i += 1) {
+    fullString += `${i + 1}: ${arrayFile[i]}\n`
+  }
+  if (fs.existsSync(outputFile)) {
+    if (overwriteFile === '-y') {
+      fs.writeFile(outputFile, fullString, (err) => {
+        if(err) {
+          throw err
+        }
+      })
+    } else {
+      console.log('Dont overwrite the file!')
+      process.exit(1)
+    }
+    console.log('The file exists:', outputFile)
+  } else {
+    fs.writeFile(outputFile, fullString, (err) => {
+      if (err) { 
+        throw err
+      }
+      console.log('File is created successfully.')
+      process.exit(1)
+    })
+  }
+} else {
+  console.log('The "path" argument must be of type string or an instance of Buffer or URL.')
 }
