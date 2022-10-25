@@ -11,7 +11,5 @@
         "ecmaVersion": "latest"
     },
     "rules": {
-        "semi": ["error", "never"],
-        "no-console":"off"
     }
 }
